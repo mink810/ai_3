@@ -1,0 +1,12 @@
+{
+  "id": "visu_tk_prod",
+  "type": "tkinter",
+  "window_title": "AI Platform Visu (PROD)",
+  "geometry": "1920x1080",
+  "refresh_ms": 200,
+  "theme": "dark",
+  "font": {
+    "family": "Arial",
+    "size": 12
+  }
+}

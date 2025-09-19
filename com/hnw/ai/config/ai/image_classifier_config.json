@@ -1,0 +1,8 @@
+{
+  "type": "image_classification",
+  "model_name": "사과토마토분류기",
+  "model_id": "image_classifier_001",
+  "num_classes": 2,
+  "class_names": ["apples", "tomatoes"],
+  "device": "cpu"
+}

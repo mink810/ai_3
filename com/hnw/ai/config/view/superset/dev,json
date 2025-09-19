@@ -1,0 +1,25 @@
+{
+  "id": "visu_superset_dev",
+  "type": "superset",
+  "base_url": "https://superset-dev.example.com",
+  "auth": {
+    "method": "api_key",
+    "api_key": "REPLACE_WITH_DEV_API_KEY"
+  },
+  "dashboard_ids": [ 21, 34 ],
+  "embed": {
+    "mode": "iframe",
+    "width": 1280,
+    "height": 800
+  },
+  "refresh_ms": 500,
+  "params": {
+    "env": "dev",
+    "force": true
+  },
+  "verify_ssl": true,
+  "timeout_sec": 15,
+  "csrf": {
+    "enabled": true
+  }
+}

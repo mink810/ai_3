@@ -1,0 +1,39 @@
+{
+  "views": [
+    {
+      "id": "view_tk_dev",
+      "type": "tkinter",
+      "config_file": "tkinter/dev.json"
+    },
+    {
+      "id": "view_spotfire_prod",
+      "type": "spotfire",
+      "config_file": "spotfire/prod.json"
+    },
+    {
+      "id": "view_superset_dev",
+      "type": "superset",
+      "config_file": "superset/dev.json"
+    },
+	{
+      "id": "view_html_dev",
+      "type": "html",
+      "config_file": "html/dev.json"
+    },
+    {
+      "id": "view_react_dev",
+      "type": "react",
+      "config_file": "react/dev.json"
+    },
+    {
+      "id": "view_vue_dev",
+      "type": "vue",
+      "config_file": "vue/dev.json"
+    },
+    {
+      "id": "view_image_classification_dev",
+      "type": "image_classification",
+      "config_file": "tkinter/image_classification_dev.json"
+    }
+  ]
+}

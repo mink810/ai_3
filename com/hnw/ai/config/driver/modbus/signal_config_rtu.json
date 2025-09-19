@@ -1,0 +1,15 @@
+{
+  "connection": {
+    "port": "COM3",
+    "baudrate": 9600,
+    "parity": "N",
+    "stopbits": 1,
+    "slave_id": 1,
+    "read_start_address": 0
+  },
+  "schema": [
+    { "name": "온도_RTU", "address": 0, "length": 1, "unit": "°C", "scale": 0.1, "offset": -5, "priority": 1 },
+    { "name": "습도_RTU", "address": 1, "length": 1, "unit": "%", "scale": 1, "offset": 0, "priority": 2 },
+    { "name": "전력_RTU", "address": 2, "length": 2, "unit": "W", "scale": 1, "offset": 0, "priority": 3 }
+  ]
+}

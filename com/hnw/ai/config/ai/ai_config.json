@@ -1,0 +1,12 @@
+{
+  "ai_models": [
+    {
+      "id": "image_classifier_dev",
+      "name": "사과토마토분류기",
+      "type": "image_classification",
+      "config_file": "image_classifier_config.json"
+    }
+  ]
+}
+
+

@@ -1,0 +1,24 @@
+{
+  "storages": [
+    {
+      "id": "ods_oracle_dev",
+      "type": "oracle",
+      "config_file": "oracle/dev.json"
+    },
+    {
+      "id": "ods_oracle_prod",
+      "type": "oracle",
+      "config_file": "oracle/prod.json"
+    },
+    {
+      "id": "dw_postgres_dev",
+      "type": "postgres",
+      "config_file": "postgres/dev.json"
+    },
+    {
+      "id": "ai_data_mysql_dev",
+      "type": "mysql",
+      "config_file": "mysql/dev.json"
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "drivers": [
+    {
+      "id": "modbus_dev_1",
+      "name": "온도센서_1호기",
+      "type": "modbus_tcp",
+      "config_file": "modbus/signal_config_tcp_1.json"
+    },
+    {
+      "id": "modbus_dev_2",
+      "name": "전력센서_2호기",
+      "type": "modbus_tcp",
+      "config_file": "modbus/signal_config_tcp_2.json"
+    },
+    {
+      "id": "modbus_rtu_1",
+      "name": "공정라인_RTU_1",
+      "type": "modbus_rtu",
+      "config_file": "modbus/signal_config_rtu.json"
+    }
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "id": "visu_spotfire_dev",
+  "type": "spotfire",
+  "server_url": "https://spotfire-dev.example.com",
+  "auth": {
+    "method": "api_token",
+    "api_token": "REPLACE_WITH_DEV_TOKEN"
+  },
+  "dashboard_paths": [
+    "/Teams/AI/DEV/Dashboards/SignalMonitor",
+    "/Teams/AI/DEV/Dashboards/AnomalyOverview"
+  ],
+  "embed": {
+    "mode": "iframe",
+    "width": 1280,
+    "height": 800
+  },
+  "refresh_ms": 500,
+  "params": {
+    "env": "dev",
+    "theme": "light"
+  },
+  "verify_ssl": true,
+  "timeout_sec": 15
+}

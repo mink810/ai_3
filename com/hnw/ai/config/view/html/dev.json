@@ -1,0 +1,12 @@
+{
+  "id": "view_html_dev",
+  "type": "html",
+  "host": "127.0.0.1",
+  "port": 8000,
+  "title": "AI Platform Viewer - HTML (DEV)",
+  "entry_html": "com/hnw/ai/view/mod/project1/html/html_view.html",
+  "static_dir": "com/hnw/ai/view/mod/project1/html",
+  "ws_path": "/ws",
+  "request_path": "/request",
+  "spa_mode": true
+}

@@ -1,0 +1,17 @@
+{
+  "connection": {
+    "host": "127.0.0.1",
+    "port": 5022,
+    "slave_id": 1,
+    "read_start_address": 0
+  },
+  "schema": {
+    "word_order": "big",
+    "byte_order": "big",
+    "address_limit": 3,
+    "signals": [
+      { "name": "전류", "address": 0, "length": 2, "unit": "A", "scale": 1.0, "priority": 1 },
+      { "name": "전압", "address": 2, "length": 2, "unit": "V", "scale": 1.0, "priority": 2 }
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "connection": {
+    "host": "127.0.0.1",
+    "port": 5021,
+    "slave_id": 1,
+    "read_start_address": 0
+  },
+  "schema": {
+    "word_order": "big",
+    "byte_order": "big",
+    "address_limit": 7,
+    "signals": [
+      { "name": "온도",        "address": 0, "length": 1, "unit": "°C",  "scale": 1.0, "offset": 0, "priority": 1 },
+      { "name": "압력",        "address": 2, "length": 1, "unit": "kPa", "scale": 1.0, "offset": 0, "priority": 2 },
+      { "name": "상태",        "address": 4, "length": 1, "unit": "",    "scale": 1.0, "offset": 0, "priority": 3 },
+      { "name": "사용량", "address": 6, "length": 2, "unit": "kWh", "scale": 1.0, "offset": 0, "priority": 4 }
+    ]
+  }
+}

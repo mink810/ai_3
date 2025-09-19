@@ -1,0 +1,11 @@
+{
+  "window_title": "AI 이미지 분류 학습 모니터링",
+  "geometry": "1400x900",
+  "auto_refresh": true,
+  "auto_refresh_ms": 10000,
+  "datasources": {
+    "model_info": "ai_model_info",
+    "training_history": "ai_training_history",
+    "model_metrics": "ai_model_metrics"
+  }
+}

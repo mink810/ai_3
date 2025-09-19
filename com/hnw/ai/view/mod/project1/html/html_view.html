@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <title>AI Platform Viewer - HTML</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    body { font-family: system-ui, sans-serif; margin: 16px; }
+    .pane { border: 1px solid #ddd; border-radius: 8px; padding: 12px; margin-bottom: 16px; }
+    .toolbar { display: flex; gap: 8px; align-items: center; }
+    table { width: 100%; border-collapse: collapse; margin-top: 8px; }
+    th, td { border: 1px solid #e5e5e5; padding: 6px 8px; text-align: center; }
+    th { cursor: pointer; background: #fafafa; }
+    .status { margin-top: 8px; font-size: 12px; color: #555; }
+    .title { font-weight: bold; margin-bottom: 8px; }
+    .right { margin-left: auto; display:flex; gap:8px; align-items:center; }
+    input[type="number"] { width: 90px; }
+  </style>
+</head>
+<body>
+  <h1>AI Platform Viewer - HTML Two Pane</h1>
+
+  <div id="pane-top" class="pane">
+    <div class="title" id="title-top">상단(ds_top)</div>
+    <div class="toolbar">
+      <button onclick="requestPane('top')">새로고침</button>
+      <button onclick="clearTable('top')">표 지우기</button>
+      <button onclick="resetSort('top')">정렬 초기화</button>
+      <div class="right">
+        <label><input type="checkbox" id="auto-top" checked> 자동갱신</label>
+        <label>간격(ms) <input type="number" id="ms-top" min="200" step="100" value="1000"></label>
+      </div>
+    </div>
+    <table>
+      <thead id="thead-top"></thead>
+      <tbody id="tbody-top"></tbody>
+    </table>
+    <div class="status" id="status-top">TOP | 대기 중</div>
+  </div>
+
+  <div id="pane-bottom" class="pane">
+    <div class="title" id="title-bottom">하단(ds_bottom)</div>
+    <div class="toolbar">
+      <button onclick="requestPane('bottom')">새로고침</button>
+      <button onclick="clearTable('bottom')">표 지우기</button>
+      <button onclick="resetSort('bottom')">정렬 초기화</button>
+      <div class="right">
+        <label><input type="checkbox" id="auto-bottom" checked> 자동갱신</label>
+        <label>간격(ms) <input type="number" id="ms-bottom" min="200" step="100" value="1000"></label>
+      </div>
+    </div>
+    <table>
+      <thead id="thead-bottom"></thead>
+      <tbody id="tbody-bottom"></tbody>
+    </table>
+    <div class="status" id="status-bottom">BOTTOM | 대기 중</div>
+  </div>
+
+  <div class="global-status" id="global-status">대기 중</div>
+
+  <script>
+    // --- 설정/상태 ---
+    const WS_URL = (location.protocol === 'https:' ? 'wss://' : 'ws://') + location.host + '/ws';
+    const paneIndex = { top: 'ds_top', bottom: 'ds_bottom' }; // 기존 사양과 동일 ID
+    const sortState = { top: null, bottom: null };
+    const columnsForPane = { top: [], bottom: [] };
+    const autoTimers = { top: null, bottom: null };
+
+    let ws;
+
+    function setGlobalStatus(msg) { document.getElementById('global-status').textContent = msg; }
+    function setStatus(pane, msg) { document.getElementById(`status-${pane}`).textContent = `${pane.toUpperCase()} | ${msg}`; }
+
+    function connectWS() {
+      ws = new WebSocket(WS_URL);
+      ws.onopen = () => { setGlobalStatus('WS 연결됨'); ['top','bottom'].forEach(p => scheduleAuto(p)); };
+      ws.onmessage = (ev) => {
+        try {
+          const msg = JSON.parse(ev.data);
+          if (msg.type === 'rows') applyRows(msg.index, msg.rows, msg.columns);
+        } catch(e) {}
+      };
+      ws.onclose = () => {
+        setGlobalStatus('WS 종료. 2초 후 재연결…');
+        clearInterval(autoTimers.top); clearInterval(autoTimers.bottom);
+        setTimeout(connectWS, 2000);
+      };
+      ws.onerror = () => setGlobalStatus('WS 오류');
+    }
+
+    // ★ 변경: /request(POST)로 UiGateway.request_data 트리거
+    async function requestAPI(index, options = {}) {
+      try {
+        const res = await fetch('/request', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ index, options })
+        });
+        if (!res.ok) {
+          setGlobalStatus(`요청 실패(${res.status})`);
+        }
+      } catch (err) {
+        setGlobalStatus('요청 에러: ' + (err?.message || err));
+      }
+    }
+
+    // --- UI 동작 ---
+    function scheduleAuto(pane) {
+      if (autoTimers[pane]) { clearInterval(autoTimers[pane]); autoTimers[pane] = null; }
+      const enabled = document.getElementById(`auto-${pane}`).checked;
+      let ms = parseInt(document.getElementById(`ms-${pane}`).value || '1000', 10);
+      if (isNaN(ms) || ms < 200) ms = 200;
+      if (enabled) {
+        requestPane(pane);
+        autoTimers[pane] = setInterval(() => requestPane(pane), ms);
+      }
+    }
+    document.getElementById('auto-top').addEventListener('change', () => scheduleAuto('top'));
+    document.getElementById('ms-top').addEventListener('change', () => scheduleAuto('top'));
+    document.getElementById('auto-bottom').addEventListener('change', () => scheduleAuto('bottom'));
+    document.getElementById('ms-bottom').addEventListener('change', () => scheduleAuto('bottom'));
+
+    function requestPane(pane) {
+      const idx = paneIndex[pane];
+      setGlobalStatus(`${pane.toUpperCase()} | index ${idx} 새로고침 요청`);
+      requestAPI(idx, {});
+    }
+    function clearTable(pane) { document.getElementById(`tbody-${pane}`).innerHTML = ''; setStatus(pane, '표 비움'); }
+    function resetSort(pane) { sortState[pane] = null; setStatus(pane, '정렬 초기화'); }
+
+    // --- 수신 적용 ---
+    function applyRows(index, rows, columns) {
+      const pane = (index === paneIndex.top) ? 'top' : (index === paneIndex.bottom) ? 'bottom' : null;
+      if (!pane) return;
+      const desired = resolveColumns(rows, columns);
+      const cur = columnsForPane[pane];
+      if (!arraysEqual(desired, cur)) {
+        rebuildHeader(pane, desired);
+        columnsForPane[pane] = desired;
+        sortState[pane] = null;
+      }
+      const sorted = applySort(pane, rows, desired);
+      fillTable(pane, sorted, desired);
+      document.getElementById(`title-${pane}`).textContent = `${pane === 'top' ? '상단' : '하단'}(${index})`;
+      setStatus(pane, `수신 ${sorted.length}건`);
+      setGlobalStatus(`${pane.toUpperCase()} | index ${index} 수신: ${sorted.length}건`);
+    }
+
+    function resolveColumns(rows, columns) {
+      if (columns && columns.length > 0) return [...columns];
+      if (rows && rows.length > 0 && typeof rows[0] === 'object') return Object.keys(rows[0]);
+      return [];
+    }
+    function rebuildHeader(pane, cols) {
+      const thead = document.getElementById(`thead-${pane}`); thead.innerHTML = '';
+      const tr = document.createElement('tr');
+      cols.forEach((c, idx) => {
+        const th = document.createElement('th'); th.textContent = c;
+        th.addEventListener('click', () => sortByColumn(pane, c, idx));
+        tr.appendChild(th);
+      });
+      thead.appendChild(tr);
+      document.getElementById(`tbody-${pane}`).innerHTML = '';
+    }
+    function sortByColumn(pane, colName, colIdx) {
+      const st = sortState[pane]; let asc = true; if (st && st.column === colName) asc = !st.asc;
+      sortState[pane] = { column: colName, asc, colIdx }; setStatus(pane, `정렬: ${colName} ${asc ? '▲' : '▼'}`);
+    }
+    function applySort(pane, rows, cols) {
+      const st = sortState[pane]; if (!st || !rows || !cols || st.colIdx == null) return rows;
+      const col = cols[st.colIdx];
+      const cast = (v) => { const f = parseFloat(v); return Number.isFinite(f) ? f : String(v ?? ''); };
+      return [...rows].sort((a, b) => {
+        const va = cast(a[col]); const vb = cast(b[col]);
+        if (va < vb) return st.asc ? -1 : 1;
+        if (va > vb) return st.asc ?  1 : -1;
+        return 0;
+      });
+    }
+    function fillTable(pane, rows, cols) {
+      const tbody = document.getElementById(`tbody-${pane}`); tbody.innerHTML = '';
+      const MAX = 300; const slice = rows.length > MAX ? rows.slice(-MAX) : rows;
+      for (const r of slice) {
+        const tr = document.createElement('tr');
+        for (const c of cols) { const td = document.createElement('td'); td.textContent = String(r[c] ?? ''); tr.appendChild(td); }
+        tbody.appendChild(tr);
+      }
+    }
+    function arraysEqual(a, b) { if (a.length !== b.length) return false; for (let i=0;i<a.length;i++) if (a[i]!==b[i]) return false; return true; }
+
+    connectWS();
+  </script>
+</body>
+</html>

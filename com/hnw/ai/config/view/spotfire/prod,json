@@ -1,0 +1,25 @@
+{
+  "id": "visu_spotfire_prod",
+  "type": "spotfire",
+  "server_url": "https://spotfire.example.com",
+  "auth": {
+    "method": "api_token",
+    "api_token": "REPLACE_WITH_PROD_TOKEN"
+  },
+  "dashboard_paths": [
+    "/Teams/AI/PROD/Dashboards/SignalMonitor",
+    "/Teams/AI/PROD/Dashboards/AnomalyOverview"
+  ],
+  "embed": {
+    "mode": "iframe",
+    "width": 1920,
+    "height": 1080
+  },
+  "refresh_ms": 200,
+  "params": {
+    "env": "prod",
+    "theme": "dark"
+  },
+  "verify_ssl": true,
+  "timeout_sec": 15
+}

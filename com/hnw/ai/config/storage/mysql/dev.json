@@ -1,0 +1,12 @@
+{
+  "type": "mysql",
+  "id": "ai_data_mysql_dev",
+  "user": "root",
+  "password": "alsrud2",
+  "host": "127.0.0.1",
+  "port": 3306,
+  "database": "ai_data",
+  "charset": "utf8mb4"
+}
+
+

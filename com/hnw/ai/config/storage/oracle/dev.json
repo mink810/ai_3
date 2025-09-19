@@ -1,0 +1,10 @@
+{
+  "type": "oracle",
+  "id": "ods_oracle_dev",
+  "user": "AI",
+  "password": "AI",
+  "host": "127.0.0.1",
+  "port": 1521,
+  "sid": "PDM",
+  "lib_dir": "d:/app/ubiab/product/11.2.0/dbhome_1/BIN/"
+}

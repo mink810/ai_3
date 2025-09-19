@@ -1,0 +1,12 @@
+{
+  "id": "view_react_dev",
+  "type": "react",
+  "host": "127.0.0.1",
+  "port": 8010,
+  "title": "AI Platform Viewer - React (DEV)",
+  "entry_html": "com/hnw/ai/view/mod/project1/react/dist/index.html",
+  "static_dir": "com/hnw/ai/view/mod/project1/react/dist",
+  "ws_path": "/ws",
+  "request_path": "/request",
+  "spa_mode": true
+}

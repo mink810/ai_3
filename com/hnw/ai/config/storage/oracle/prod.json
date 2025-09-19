@@ -1,0 +1,9 @@
+{
+  "type": "oracle",
+  "id": "ods_oracle_prod",
+  "user": "prod_user",
+  "password": "secure_prod_pass",
+  "host": "192.168.100.50",
+  "port": 1521,
+  "sid": "PRODDB"
+}
